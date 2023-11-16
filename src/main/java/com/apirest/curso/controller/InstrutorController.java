@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apirest.curso.dto.InstrutorRequest;
 import com.apirest.curso.entities.Instrutor;
 import com.apirest.curso.entities.InstrutorDetalhes;
 import com.apirest.curso.exception.ResourceNotFoundException;
@@ -127,6 +128,32 @@ public class InstrutorController {
         Map<String, Boolean> resposta = new HashMap<>();
         resposta.put("Instrutor e Detalhes Eliminados", Boolean.TRUE);
         return resposta;
+    }
+
+    // Exemplo utilizando DTO
+    // localhost:8080/api/instrutor/create-dto
+    @PostMapping("/create-dto")
+    public ResponseEntity<String> criarInstrutorDTO(@Valid @RequestBody InstrutorRequest instrutorRequest){
+
+        // criar detalhes do instrutor
+        InstrutorDetalhes instrutorDetalhes = new InstrutorDetalhes();
+        instrutorDetalhes.setCursoProgramacao(instrutorRequest.getCursoProgramacao());
+        instrutorDetalhes.setHobby(instrutorRequest.getHobby());
+
+        // Salvar detalhes do instrutor
+        instrutorDetalhesRepository.save(instrutorDetalhes);
+
+        // Criar o instrutor
+        Instrutor instrutor = new Instrutor();
+        instrutor.setNome(instrutorRequest.getNome());
+        instrutor.setSobrenome(instrutorRequest.getSobrenome());
+        instrutor.setEmail(instrutorRequest.getEmail());
+        instrutor.setInstrutorDetalhes(instrutorDetalhes);
+
+        // Salvar o instrutor
+        instrutorRepository.save(instrutor);
+
+        return ResponseEntity.ok("Instrutor criado com sucesso!");
     }
 
 }

@@ -519,5 +519,104 @@ Este método é mapeado para a rota `/deletar/{id}` usando a anotação `@Delete
 
 Este endpoint é usado para excluir um instrutor e, se existirem, seus detalhes associados ao sistema com base no ID fornecido.
 
+## POST /api/instrutor/criar:
+
+- Descrição: Cria um novo instrutor e seus detalhes associados.
+- Método: POST
+- Endpoint: /api/instrutor/criar
+- Ação: Cria um novo instrutor e, se existir, seus detalhes associados usando instrutorRepository.save(instrutor) e instrutorDetalhesRepository.save(instrutorDetalhes).
+
+```java
+// localhost:8080/api/instrutor/create-dto
+@PostMapping("/create-dto")
+public ResponseEntity<String> criarInstrutorDTO(@Valid @RequestBody InstrutorRequest instrutorRequest){
+
+    // criar detalhes do instrutor
+    InstrutorDetalhes instrutorDetalhes = new InstrutorDetalhes();
+    instrutorDetalhes.setCursoProgramacao(instrutorRequest.getCursoProgramacao());
+    instrutorDetalhes.setHobby(instrutorRequest.getHobby());
+
+    // Salvar detalhes do instrutor
+    instrutorDetalhesRepository.save(instrutorDetalhes);
+
+    // Criar o instrutor
+    Instrutor instrutor = new Instrutor();
+    instrutor.setNome(instrutorRequest.getNome());
+    instrutor.setSobrenome(instrutorRequest.getSobrenome());
+    instrutor.setEmail(instrutorRequest.getEmail());
+    instrutor.setInstrutorDetalhes(instrutorDetalhes);
+
+    // Salvar o instrutor
+    instrutorRepository.save(instrutor);
+
+    return ResponseEntity.ok("Instrutor criado com sucesso!");
+}
+```
+
+Este método é mapeado para a rota `/create-dto` usando a anotação `@PostMapping`. Ele trata requisições HTTP POST para criar um instrutor com base nos dados fornecidos no corpo da requisição (`@RequestBody InstrutorRequest instrutorRequest`).
+
+- **`@PostMapping("/create-dto")`:**
+  - Define que este método será chamado para requisições HTTP POST na rota `/create-dto`.
+
+- **`public ResponseEntity<String> criarInstrutorDTO(@Valid @RequestBody InstrutorRequest instrutorRequest) { ... }`:**
+  - O método é público e retorna um objeto do tipo `ResponseEntity<String>`.
+  - `@Valid`: Indica que o corpo da requisição (`instrutorRequest`) deve ser validado de acordo com as regras de validação definidas nas anotações da classe `InstrutorRequest`.
+  - `@RequestBody InstrutorRequest instrutorRequest`: Indica que os dados da requisição serão convertidos automaticamente para um objeto `InstrutorRequest`.
+
+- **`InstrutorDetalhes instrutorDetalhes = new InstrutorDetalhes(); ...`:**
+  - Cria uma nova instância de `InstrutorDetalhes`.
+
+- **`instrutorDetalhes.setCursoProgramacao(instrutorRequest.getCursoProgramacao()); ...`:**
+  - Configura os detalhes do instrutor com base nos dados fornecidos no corpo da requisição.
+
+- **`instrutorDetalhesRepository.save(instrutorDetalhes);`:**
+  - Salva os detalhes do instrutor no banco de dados usando `instrutorDetalhesRepository.save(instrutorDetalhes)`.
+
+- **`Instrutor instrutor = new Instrutor(); ...`:**
+  - Cria uma nova instância de `Instrutor`.
+
+- **`instrutor.setNome(instrutorRequest.getNome()); ...`:**
+  - Configura os dados do instrutor com base nos dados fornecidos no corpo da requisição.
+
+- **`instrutor.setInstrutorDetalhes(instrutorDetalhes);`:**
+  - Associa os detalhes do instrutor criados anteriormente ao instrutor.
+
+- **`instrutorRepository.save(instrutor);`:**
+  - Salva o instrutor no banco de dados usando `instrutorRepository.save(instrutor)`.
+
+- **`return ResponseEntity.ok("Instrutor criado com sucesso!");`:**
+  - Retorna uma resposta HTTP 200 OK com uma mensagem indicando que o instrutor foi criado com sucesso.
+
+**Passo a passo do funcionamento:**
+
+1. **Requisição HTTP POST para `/create-dto`:**
+   - Um cliente (navegador, aplicativo, etc.) faz uma requisição POST para a rota `/create-dto`.
+
+2. **Mapeamento do Controlador:**
+   - O controlador recebe a requisição devido à anotação `@PostMapping("/create-dto")`.
+
+3. **Validação dos Dados do Corpo da Requisição:**
+   - Os dados fornecidos no corpo da requisição (`instrutorRequest`) são validados de acordo com as regras definidas nas anotações da classe `InstrutorRequest`.
+
+4. **Criação dos Detalhes do Instrutor:**
+   - Uma instância de `InstrutorDetalhes` é criada e configurada com base nos dados fornecidos no corpo da requisição.
+
+5. **Salvamento dos Detalhes do Instrutor no Banco de Dados:**
+   - Os detalhes do instrutor são salvos no banco de dados usando `instrutorDetalhesRepository.save(instrutorDetalhes)`.
+
+6. **Criação do Instrutor:**
+   - Uma instância de `Instrutor` é criada e configurada com base nos dados fornecidos no corpo da requisição.
+
+7. **Associação dos Detalhes ao Instrutor:**
+   - Os detalhes do instrutor criados anteriormente são associados ao instrutor.
+
+8. **Salvamento do Instrutor no Banco de Dados:**
+   - O instrutor é salvo no banco de dados usando `instrutorRepository.save(instrutor)`.
+
+9. **Resposta ao Cliente:**
+   - Uma resposta HTTP 200 OK é retornada com a mensagem "Instrutor criado com sucesso!".
+
+Este endpoint é usado para criar um instrutor juntamente com seus detalhes no sistema com base nos dados fornecidos no corpo da requisição.
+
 # Autor
 ## Feito por: `Daniel Penelva de Andrade`
