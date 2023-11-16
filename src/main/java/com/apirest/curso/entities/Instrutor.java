@@ -1,5 +1,6 @@
 package com.apirest.curso.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,7 +30,7 @@ public class Instrutor {
     private String email;
 
     // Um instrutor vai pertence a um detalhe
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "instrutor_detalhes_id")
     private InstrutorDetalhes instrutorDetalhes;
 
